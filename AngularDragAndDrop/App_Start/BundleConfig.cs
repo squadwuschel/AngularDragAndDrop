@@ -14,7 +14,9 @@ namespace AngularDragAndDrop
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                      //  "",
+                       "~/ScriptsApp/directives/dragAndDropData.directives.js",
+                       "~/ScriptsApp/views/mainCtrl.js",
+                       "~/ScriptsApp/views/main.app.js"
                         ));
 
             bundles.Add(new StyleBundle("~/Content/styles").Include(

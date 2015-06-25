@@ -1,1 +1,14 @@
 ﻿
+/* Styles für Drag And Drop - START */ 
+
+[draggable] {
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            /* Required to make elements draggable in old WebKit */
+            -webkit-user-drag: element;
+             cursor: move;
+ }
+
+/* Styles für Drag And Drop - ENDE */ 

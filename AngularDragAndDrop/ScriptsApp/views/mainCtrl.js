@@ -1,24 +1,51 @@
 var App;
 (function (App) {
-    var MainApp = (function () {
-        function MainApp() {
-        }
-        MainApp.createApp = function (angular) {
-            //Alle Module definieren die wir verwenden.
-            angular.module("app.main", [
-            ]);
-        };
-        return MainApp;
-    })();
-    App.MainApp = MainApp;
+    var Views;
+    (function (Views) {
+        'use strict';
+        var MainCtrlLocals = (function () {
+            function MainCtrlLocals() {
+                this.items = [
+                    { name: "johanne", vorname: "test", alter: 12 },
+                    { name: "Willhelm", vorname: "Tell", alter: 16 },
+                    { name: "Axel", vorname: "Schweiß", alter: 41 },
+                    { name: "Thomas", vorname: "Hermann", alter: 41 },
+                    { name: "Sven", vorname: "Schlüter", alter: 41 },
+                    { name: "Bertram", vorname: "Huber", alter: 54 }
+                ];
+            }
+            return MainCtrlLocals;
+        })();
+        Views.MainCtrlLocals = MainCtrlLocals;
+        var MainCtrl = (function () {
+            function MainCtrl() {
+                this.init();
+            }
+            MainCtrl.prototype.init = function () {
+                this.locals = new MainCtrlLocals();
+                this.locals.name = "Test";
+            };
+            MainCtrl.prototype.dragStarted = function (draggedData) {
+                console.log("Die Daten werden verschoben: " + draggedData);
+            };
+            MainCtrl.prototype.dataDropped = function (droppedData, currentRowData) {
+                console.log("Die Daten wurden verschoben von: " + droppedData.name + ' zum Knoten: ' + currentRowData.name);
+            };
+            Object.defineProperty(MainCtrl, "module", {
+                get: function () {
+                    if (this._module) {
+                        return this._module;
+                    }
+                    this._module = angular.module('mainCtrl', []);
+                    this._module.controller('mainCtrl', MainCtrl);
+                    return this._module;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return MainCtrl;
+        })();
+        Views.MainCtrl = MainCtrl;
+    })(Views = App.Views || (App.Views = {}));
 })(App || (App = {}));
-//Unsere Anwendung intial aufrufen/starten
-App.MainApp.createApp(angular);
-//Stackoverflow Post zur Frage wie man eine App am besten initialisiert
-//http://stackoverflow.com/questions/29545246/how-to-initialize-angularjs-app-with-typescript
-//Wenn wir die TypeScript Compilierung verwenden in der alle Ts Scripte in eine Datei compiliert werden, dann muss
-//eine "_references.ts" Datei im Root des Projektes liegen und enthält alle Abhängigkeiten inkl. 
-//der passenden Reihenfolge damit TS weiß welche Datei von welcher abhängt und alle in der richtigen Reihenfolge compiliert werden
-//und damit am Ende auch alle Abhängigkeiten gefunden werden. - ACHTUNG ich hatte hier einige Probleme mit der richtigen Reihenfolge, daher
-//verwende ich die Bundles von .NET 
 //# sourceMappingURL=mainCtrl.js.map
