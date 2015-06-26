@@ -9,8 +9,8 @@ var App;
                     { name: "johanne", vorname: "test", alter: 12 },
                     { name: "Willhelm", vorname: "Tell", alter: 16 },
                     { name: "Axel", vorname: "Schweiß", alter: 41 },
-                    { name: "Thomas", vorname: "Hermann", alter: 41 },
-                    { name: "Sven", vorname: "Schlüter", alter: 41 },
+                    { name: "Thomas", vorname: "Hermann", alter: 51 },
+                    { name: "Sven", vorname: "Schlüter", alter: 25 },
                     { name: "Bertram", vorname: "Huber", alter: 54 }
                 ];
             }

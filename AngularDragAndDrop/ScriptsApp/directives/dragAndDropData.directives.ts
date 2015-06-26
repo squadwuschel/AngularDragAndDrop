@@ -5,7 +5,7 @@
         resetData(): void;
     }
 
-    interface ISqDraggableScope extends ng.IScope  {
+    interface ISqDraggableScope extends ng.IScope {
         sqDragData: any;
         sqOnDrag(): any;
     }
@@ -43,9 +43,11 @@
             var el = element[0];
             el.draggable = true;
 
-           el.addEventListener('dragstart', (e) => {
+            //ACHTUNG IE: Wenn man z.B. Drag und Drop auf einem Link verwenden möchte muss zwingend das "href" Attribut enthalten 
+            //sein sonst bindet der IE das Event nicht richtig.
+            el.addEventListener('dragstart', (e) => {
                 e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('Text', "TextdummyFuerIE");
+                //e.dataTransfer.setData('text', el.id);
                 el.classList.add('sq-drag');
                 this.sqDragAndDropDataService.addData($scope.sqDragData);
                 $scope.sqOnDrag()($scope.sqDragData);
@@ -95,7 +97,7 @@
      */
     export class SqDroppable implements ng.IDirective {
         public restrict = "A";
-        public scope : any = {
+        public scope: any = {
             sqModelData: '=',  //Die Daten des Feldes bei dem die Werte abgelegt werden, diese werden auch an die onDrop Funktion übergeben
             sqOnDrop: '&'     //Wird aufgerufen wenn der Drag vorgang am Ziel abgelegt wird und es können zwei Parameter in der CallBack Funktion übergeben werden (dragData, dropData)
         }
@@ -158,7 +160,7 @@
      */
     export class SqDragAndDropDataService implements ISqDragAndDropDataService {
         //static $inject = [];
-        private dragData : any;
+        private dragData: any;
         constructor() {
             this.init();
         }
@@ -180,7 +182,7 @@
          * Die Daten die im Service gespeichert wurden wieder zurückgeben und 
          * aus dem Service entfernen
          */
-        public getData() : any {
+        public getData(): any {
             var tempData = this.dragData;
             this.resetData();
             return tempData;
@@ -195,16 +197,16 @@
     }
 
     
-//TODO ControllerAs Syntax
-//TODO draggable="true" von der direktive einfügen
-//TODO Drag and drop aktivieren bzw. deaktivieren
-//TODO Unterschiedliche Drag and DropZone definieren, damit daten nicht zwischen Zonen verschoben werden können die nicht zusammengehören
-//TODO Config Provider in dem wir z.B. die Css Klassen definieren können
+    //TODO ControllerAs Syntax
+    //TODO draggable="true" von der direktive einfügen
+    //TODO Drag and drop aktivieren bzw. deaktivieren
+    //TODO Unterschiedliche Drag and DropZone definieren, damit daten nicht zwischen Zonen verschoben werden können die nicht zusammengehören
+    //TODO Config Provider in dem wir z.B. die Css Klassen definieren können
 
-//Quellen:
-//http://www.html5rocks.com/de/tutorials/dnd/basics/#disqus_thread
-//http://blog.parkji.co.uk/2013/08/11/native-drag-and-drop-in-angularjs.html
-//https://jasonturim.wordpress.com/2013/09/01/angularjs-drag-and-drop/
-//https://github.com/codef0rmer/angular-dragdrop/blob/master/src/angular-dragdrop.js
+    //Quellen:
+    //http://www.html5rocks.com/de/tutorials/dnd/basics/#disqus_thread
+    //http://blog.parkji.co.uk/2013/08/11/native-drag-and-drop-in-angularjs.html
+    //https://jasonturim.wordpress.com/2013/09/01/angularjs-drag-and-drop/
+    //https://github.com/codef0rmer/angular-dragdrop/blob/master/src/angular-dragdrop.js
 
 }

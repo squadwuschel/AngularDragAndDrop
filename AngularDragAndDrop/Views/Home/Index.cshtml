@@ -16,6 +16,7 @@
     <div class="row">
         <div class="col-md-12">
             Name: {{ctrl.locals.name}}
+            <a style="width: 200px; height: 25px;" sq-draggable sq-drag-data="ctrl.locals" id="test" sq-on-drag="ctrl.dragStarted" class="btn btn-default">Drag Item</a>
 
         </div>
     </div>
@@ -36,8 +37,8 @@
                     <td ng-bind="row.vorname"></td>
                     <td ng-bind="row.alter"></td>
                     <td>
-                        <a sq-draggable sq-drag-data="row" sq-on-drag="ctrl.dragStarted" class="btn btn-default">Drag Item</a>
-                        <a sq-droppable sq-model-data="row" sq-on-drop="ctrl.dataDropped" class="btn btn-primary">Drop Item</a>
+                        <a href="#" sq-draggable sq-drag-data="row" sq-on-drag="ctrl.dragStarted" class="btn btn-default">Drag Item</a>
+                        <a href="#" sq-droppable sq-model-data="row" sq-on-drop="ctrl.dataDropped" class="btn btn-primary">Drop Item</a>
                     </td>
                 </tr>
 
