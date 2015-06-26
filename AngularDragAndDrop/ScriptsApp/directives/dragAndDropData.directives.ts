@@ -5,6 +5,16 @@
         resetData(): void;
     }
 
+    interface ISqDraggableScope extends ng.IScope  {
+        sqDragData: any;
+        sqOnDrag(): any;
+    }
+
+    interface ISqDroppableScope extends ng.IScope {
+        sqModelData: any;
+        sqOnDrop(): any;
+    }
+
     /*
      * Draggable Direktive hier werden die Daten hinterlegt die verschoben werden sollen:
      * ACHTUNG: bei der CallBack Funktion im Attribut "sqOnDrag" KEINE "()" am ende setzen!!
@@ -26,20 +36,19 @@
         }
 
         constructor(private sqDragAndDropDataService: ISqDragAndDropDataService) {
-            var test = "";
         }
 
-        public link = ($scope: ng.IScope, element: JQuery, attr: ng.IAttributes) => {
-            var that = this;
+        public link = ($scope: ISqDraggableScope, element: JQuery, attr: ng.IAttributes) => {
             // this gives us the native JS object
             var el = element[0];
             el.draggable = true;
 
-            el.addEventListener('dragstart', (e) => {
+           el.addEventListener('dragstart', (e) => {
                 e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('Text', "sqDragData");
+                e.dataTransfer.setData('Text', "TextdummyFuerIE");
                 el.classList.add('sq-drag');
-                that.sqDragAndDropDataService.addData(that.scope.sqDragData);
+                this.sqDragAndDropDataService.addData($scope.sqDragData);
+                $scope.sqOnDrag()($scope.sqDragData);
                 return false;
             }, false);
 
@@ -47,31 +56,10 @@
             el.addEventListener('dragend', (e) => {
                 el.classList.remove('sq-drag');
                 //Die Daten im Service zurücksetzen
-                that.sqDragAndDropDataService.resetData();
+                this.sqDragAndDropDataService.resetData();
                 return false;
             }, false);
         }
-
-        //public link = ($scope: ng.IScope, element: JQuery, attr: ng.IAttributes) => {
-        //    // this gives us the native JS object
-        //    var el = element[0];
-        //    el.draggable = true;
-
-        //    el.addEventListener('dragstart', function (e) {
-        //        e.dataTransfer.effectAllowed = 'move';
-        //        e.dataTransfer.setData('Text', this.sqDragAndDropDataService.addData(this.scope.dragItem));
-        //        this.classList.add('sq-drag');
-        //        return false;
-        //    }, false);
-
-        //    //Wird aufgerufen wenn das Dragelement irgendwo abgworfen wird aber nicht über einer DropZone
-        //    el.addEventListener('dragend', function (e) {
-        //        this.classList.remove('sq-drag');
-        //        //Die Daten im Service zurücksetzen
-        //        this.sqDragAndDropDataService.resetData();
-        //        return false;
-        //    }, false);
-        //}
 
         //#region Angular Module Definition
         private static _module: ng.IModule;
@@ -115,8 +103,7 @@
         constructor(private sqDragAndDropDataService: ISqDragAndDropDataService) {
         }
 
-        public link = ($scope: ng.IScope, element: JQuery, attr: ng.IAttributes) => {
-            var that = this;
+        public link = ($scope: ISqDroppableScope, element: JQuery, attr: ng.IAttributes) => {
             // das aktuelle Native element ermitteln
             var el = element[0];
             el.addEventListener('dragover', (e) => {
@@ -151,65 +138,18 @@
                     }
                 }
 
+                var text = e.dataTransfer.getData('Text');
                 el.classList.remove('sq-over');
-                var data = that.sqDragAndDropDataService.getData();
-                if (that.scope.sqModelData !== undefined) {
-                    that.scope.sqOnDrop()(data, that.scope.sqModelData);
+                var data = this.sqDragAndDropDataService.getData();
+                if ($scope.sqModelData !== undefined) {
+                    $scope.sqOnDrop()(data, $scope.sqModelData);
                 } else {
-                    that.scope.onDrop()(data);
+                    $scope.sqOnDrop()(data);
                 }
 
                 return false;
             }, false);
         }
-
-        //public link = ($scope: ng.IScope, element: JQuery, attr: ng.IAttributes) => {
-        //    // das aktuelle Native element ermitteln
-        //    var el = element[0];
-        //    el.addEventListener('dragover', function (e) {
-        //        //Der Stiel des Cursors wenn das Dropitem über dem Ziel erscheint: copy, none, link, move
-        //        //http://html5.komplett.cc/code/chap_global/dropEffect_en.html
-        //        e.dataTransfer.dropEffect = 'move';
-        //        // allows us to drop
-        //        if (e.preventDefault) {
-        //            e.preventDefault();
-        //        }
-
-        //        this.classList.add('sq-over');
-        //        return false;
-        //    }, false);
-
-        //    el.addEventListener('dragenter', function (e) {
-        //        this.classList.add('sq-over');
-        //        return false;
-        //    }, false);
-
-        //    el.addEventListener('dragleave', function (e) {
-        //        this.classList.remove('sq-over');
-        //        return false;
-        //    }, false);
-
-        //    el.addEventListener('drop', function (e) {
-        //        // Stops some browsers from redirecting.
-        //        if (e.stopPropagation) {
-        //            e.stopPropagation();
-        //            if (e.preventDefault) {
-        //                e.preventDefault();
-        //            }
-        //        }
-
-        //        this.classList.remove('sq-over');
-        //        var data = this.sqDragAndDropDataService.getData(e.dataTransfer.getData('Text'));
-
-        //        if (this.scope.dropData !== undefined) {
-        //            this.scope.onDrop()(data, this.scope.dropData);
-        //        } else {
-        //            this.scope.onDrop()(data);
-        //        }
-
-        //        return false;
-        //    }, false);
-        //}
     }
 
     /*
