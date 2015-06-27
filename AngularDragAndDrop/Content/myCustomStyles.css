@@ -11,4 +11,10 @@
              cursor: move;
  }
 
+.sq-over {
+    background-color: red;
+    border-style: dashed;
+    border-width: 1px;
+}
+
 /* Styles für Drag And Drop - ENDE */ 

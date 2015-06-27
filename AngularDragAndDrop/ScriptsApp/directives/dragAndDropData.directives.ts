@@ -1,25 +1,4 @@
 ﻿module App.Directives {
-    export interface ISqDragAndDropDataService {
-        addData(data: any, dragAndDropName: string): void;
-        getData(dragAndDropName: string): any;
-        resetData(): void;
-        isSameDragAndDrop(dragAndDropName: string): boolean;
-    }
-
-    interface ISqDraggableScope extends ng.IScope {
-        sqDragDropName: string;
-        sqDragData: any;
-        sqAllowDrag: any;
-        sqOnDrag(): any;
-    }
-
-    interface ISqDroppableScope extends ng.IScope {
-        sqDragDropName: string;
-        sqModelData: any;
-        sqAllowDrop: any;
-        sqOnDrop(): any;
-    }
-
     /*
      * Draggable Direktive hier werden die Daten hinterlegt die verschoben werden sollen:
      * ACHTUNG: bei der CallBack Funktion im Attribut "sqOnDrag" KEINE "()" am ende setzen!!
@@ -160,12 +139,18 @@
                     e.preventDefault();
                 }
 
-                el.classList.add('sq-over');
+                //Die Css Klasse nur hinzufügen, wenn das Item auch Gedropt Werden darf.
+                if (this.sqDragAndDropDataService.isSameDragAndDrop(dragAndDropZoneName)) {
+                    el.classList.add('sq-over');
+                }
+
                 return false;
             }, false);
 
             el.addEventListener('dragenter', (e) => {
-                el.classList.add('sq-over');
+                if (this.sqDragAndDropDataService.isSameDragAndDrop(dragAndDropZoneName)) {
+                    el.classList.add('sq-over');
+                }
                 return false;
             }, false);
 
@@ -255,6 +240,27 @@
         isSameDragAndDrop(dragAndDropName: string): boolean {
             return dragAndDropName === this.dragAndDropName;
         }
+    }
+
+    export interface ISqDragAndDropDataService {
+        addData(data: any, dragAndDropName: string): void;
+        getData(dragAndDropName: string): any;
+        resetData(): void;
+        isSameDragAndDrop(dragAndDropName: string): boolean;
+    }
+
+    interface ISqDraggableScope extends ng.IScope {
+        sqDragDropName: string;
+        sqDragData: any;
+        sqAllowDrag: any;
+        sqOnDrag(): any;
+    }
+
+    interface ISqDroppableScope extends ng.IScope {
+        sqDragDropName: string;
+        sqModelData: any;
+        sqAllowDrop: any;
+        sqOnDrop(): any;
     }
 
     //Quellen:
