@@ -16,8 +16,6 @@
     <div class="row">
         <div class="col-md-12">
             Name: {{ctrl.locals.name}}
-            <a style="width: 200px; height: 25px;" sq-draggable sq-drag-data="ctrl.locals" id="test" sq-on-drag="ctrl.dragStarted" class="btn btn-default">Drag Item</a>
-
         </div>
     </div>
     <div class="row">
@@ -37,14 +35,37 @@
                     <td ng-bind="row.vorname"></td>
                     <td ng-bind="row.alter"></td>
                     <td>
-                        <a href="#" sq-draggable sq-drag-data="row" sq-on-drag="ctrl.dragStarted" class="btn btn-default">Drag Item</a>
-                        <a href="#" sq-droppable sq-model-data="row" sq-on-drop="ctrl.dataDropped" class="btn btn-primary">Drop Item</a>
+                        <a href="#" sq-draggable sq-drag-data="row" sq-on-drag="ctrl.dragStarted" sq-allow-drag="row.draggable" sq-drag-drop-name="'Zone1'" class="btn btn-default">Drag Item</a>
+                        <a href="#" sq-droppable sq-model-data="row" sq-on-drop="ctrl.dataDropped" sq-allow-drop="row.draggable" sq-drag-drop-name="'Zone1'" class="btn btn-primary">Drop Item</a>
                     </td>
                 </tr>
-
                 </tbody>
             </table>
-
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Vorname</th>
+                        <th>Alter</th>
+                        <th>Optionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in ctrl.locals.items">
+                        <td ng-bind="row.name"></td>
+                        <td ng-bind="row.vorname"></td>
+                        <td ng-bind="row.alter"></td>
+                        <td>
+                            <a href="#" sq-draggable sq-drag-data="row" sq-on-drag="ctrl.dragStarted" sq-drag-drop-name="'Zone2'" class="btn btn-default">Drag Item</a>
+                            <a href="#" sq-droppable sq-model-data="row" sq-on-drop="ctrl.dataDropped" sq-drag-drop-name="'Zone2'" class="btn btn-primary">Drop Item</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

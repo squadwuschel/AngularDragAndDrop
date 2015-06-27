@@ -6,12 +6,12 @@ var App;
         var MainCtrlLocals = (function () {
             function MainCtrlLocals() {
                 this.items = [
-                    { name: "johanne", vorname: "test", alter: 12 },
-                    { name: "Willhelm", vorname: "Tell", alter: 16 },
-                    { name: "Axel", vorname: "Schweiß", alter: 41 },
-                    { name: "Thomas", vorname: "Hermann", alter: 51 },
-                    { name: "Sven", vorname: "Schlüter", alter: 25 },
-                    { name: "Bertram", vorname: "Huber", alter: 54 }
+                    { name: "johanne", vorname: "test", alter: 12, draggable: false },
+                    { name: "Willhelm", vorname: "Tell", alter: 16, draggable: false },
+                    { name: "Axel", vorname: "Schweiß", alter: 41, draggable: false },
+                    { name: "Thomas", vorname: "Hermann", alter: 51, draggable: true },
+                    { name: "Sven", vorname: "Schlüter", alter: 25, draggable: true },
+                    { name: "Bertram", vorname: "Huber", alter: 54, draggable: true }
                 ];
             }
             return MainCtrlLocals;
