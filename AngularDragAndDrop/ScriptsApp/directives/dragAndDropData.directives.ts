@@ -52,9 +52,8 @@
             //sein sonst bindet der IE das Event nicht richtig.
             el.addEventListener('dragstart', (e) => {
                 e.dataTransfer.effectAllowed = 'move';
-                //e.dataTransfer.setData('text', el.id);
                 el.classList.add('sq-drag');
-                this.sqDragAndDropDataService.addData($scope.sqDragData, dragAndDropZoneName);
+                this.sqDragAndDropDataService.setData($scope.sqDragData, dragAndDropZoneName);
                 $scope.sqOnDrag()($scope.sqDragData);
                 return false;
             }, false);
@@ -71,15 +70,14 @@
         //#region Angular Module Definition
         private static _module: ng.IModule;
         /**
-        * Stellt das aktuelle Angular Modul für den "todoListenService" bereit.
+        * Stellt die Angular Module für DragAndDrop bereit.
         */
         public static get module(): ng.IModule {
             if (this._module) {
                 return this._module;
             }
 
-            //Hier die abhängigen Module für diesen controller definieren, damit brauchen wir von Außen nur den Controller einbinden
-            //und müssen seine Abhängkeiten nicht wissen.
+            //Hier die abhängigen Module für unser Drang and Drop definieren.
             this._module = angular.module('dragAndDropData.directives', []);
             //Da unsere Direktive aus mehreren Definitionen besteht in der Draggable Moduldefinition alle Module definieren
             this._module.directive('sqDraggable', ["SqDragAndDropDataService", (sqDragAndDropDataService) => { return new SqDraggable(sqDragAndDropDataService); }]);
@@ -207,7 +205,7 @@
         /*
          * Die übergebenen Daten im Service ablegen
          */
-        public addData(data: any, dragAndDropName: string): void {
+        public setData(data: any, dragAndDropName: string): void {
             //Da man immer nur einen Drag und Drop Vorgang gleichzeitig ausgühren kann, reicht auch 
             //ein Objekt aus in dem die aktuellen Drag und Drop Daten gespeichert werden.
             this.dragData = data;
@@ -243,7 +241,7 @@
     }
 
     export interface ISqDragAndDropDataService {
-        addData(data: any, dragAndDropName: string): void;
+        setData(data: any, dragAndDropName: string): void;
         getData(dragAndDropName: string): any;
         resetData(): void;
         isSameDragAndDrop(dragAndDropName: string): boolean;
