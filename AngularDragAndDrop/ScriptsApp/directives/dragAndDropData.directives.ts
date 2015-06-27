@@ -33,7 +33,7 @@
      * 
      * Verwendung: 
      * 
-     * <a sq-draggable sq-drag-data="row" sq-on-drag="ctrl.dragStarted" sq-allow-drag="true">Drag Data</a>
+     * <a sq-draggable sq-drag-data="row" sq-on-drag="ctrl.dragStarted" sq-allow-drag="true" sq-drag-drop-name="'ZoneOne'">Drag Data</a>
      */
     export class SqDraggable implements ng.IDirective {
         public restrict = "A";
@@ -122,7 +122,7 @@
      * sq-allow-drop -> Gibt an ob es erlaubt ist auf diesem Item ein anderes zu Droppen Default: True
      * sq-drag-drop-name -> String in dem der Name der Drag und Dropzone angeben wird und nur wenn der Name stimmt kann ein Item auf der Zone abgelegt werden. Default: "sqDragAndDrop"
      * 
-     * <a sq-droppable sq-model-Data="row" sq-on-drop="ctrl.dataDropped" sq-allow-drop="row.allowDrop" >Drop Data Here</a>
+     * <a sq-droppable sq-model-Data="row" sq-on-drop="ctrl.dataDropped" sq-allow-drop="row.allowDrop" sq-drag-drop-name="'ZoneOne'">Drop Data Here</a>
      */
     export class SqDroppable implements ng.IDirective {
         public restrict = "A";
@@ -256,10 +256,6 @@
             return dragAndDropName === this.dragAndDropName;
         }
     }
-
-    
-    //TODO ControllerAs Syntax
-    //TODO Config Provider in dem wir z.B. die Css Klassen definieren können
 
     //Quellen:
     //http://www.html5rocks.com/de/tutorials/dnd/basics/#disqus_thread

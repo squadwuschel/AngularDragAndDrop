@@ -6,7 +6,7 @@ var App;
         var MainCtrlLocals = (function () {
             function MainCtrlLocals() {
                 this.items = [
-                    { name: "johanne", vorname: "test", alter: 12, draggable: false },
+                    { name: "Johannes", vorname: "Test", alter: 12, draggable: false },
                     { name: "Willhelm", vorname: "Tell", alter: 16, draggable: false },
                     { name: "Axel", vorname: "Schweiß", alter: 41, draggable: false },
                     { name: "Thomas", vorname: "Hermann", alter: 51, draggable: true },
@@ -26,7 +26,7 @@ var App;
                 this.locals.name = "Test";
             };
             MainCtrl.prototype.dragStarted = function (draggedData) {
-                console.log("Die Daten werden verschoben: " + draggedData);
+                console.log("Die Daten werden verschoben: " + draggedData.name);
             };
             MainCtrl.prototype.dataDropped = function (droppedData, currentRowData) {
                 console.log("Die Daten wurden verschoben von: " + droppedData.name + ' zum Knoten: ' + currentRowData.name);
