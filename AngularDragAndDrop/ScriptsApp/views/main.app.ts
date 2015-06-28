@@ -5,6 +5,11 @@
             angular.module("app.main", [
                 App.Views.MainCtrl.module.name,
                 App.Directives.SqDraggable.module.name
+            ])
+                //Per Config die passenden DragAndDrop Provider Css Klassen setzen.
+                .config(["dragAndDropConfigProvider", (dragAndDropConfigProvider: Directives.IDragAndDropServiceProvider) => {
+                    dragAndDropConfigProvider.config.dragstartCss = "btn-info";
+                }
             ]);
         }
     }

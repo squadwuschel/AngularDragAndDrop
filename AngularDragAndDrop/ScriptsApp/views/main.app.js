@@ -8,6 +8,10 @@ var App;
             angular.module("app.main", [
                 App.Views.MainCtrl.module.name,
                 App.Directives.SqDraggable.module.name
+            ])
+                .config(["dragAndDropConfigProvider", function (dragAndDropConfigProvider) {
+                    dragAndDropConfigProvider.config.dragstartCss = "btn-info";
+                }
             ]);
         };
         return MainApp;

@@ -24,12 +24,13 @@
             sqDragDropName: "=" //Der Name für die DragZone man kann nur Zwischen den gleichen Dragnamen Items verschieben. Optionaler Parameter - Default: "sqDragAndDrop"
         }
 
-        constructor(private sqDragAndDropDataService: ISqDragAndDropDataService) {
+        constructor(private sqDragAndDropDataService: ISqDragAndDropDataService, private dragAndDropConfig: IDragAndDropServiceProvider) {
         }
 
         public link = ($scope: ISqDraggableScope, element: JQuery, attr: ng.IAttributes) => {
             // this gives us the native JS object
             var el = element[0];
+
 
             //Prüfen ob das Attribut sqDraggable gesetzt wurde und die draggable Eigenschaft entsprechend setzen.
             if ($scope.sqAllowDrag === undefined || $scope.sqAllowDrag === null) {
@@ -52,7 +53,7 @@
             //sein sonst bindet der IE das Event nicht richtig.
             el.addEventListener('dragstart', (e) => {
                 e.dataTransfer.effectAllowed = 'move';
-                el.classList.add('sq-drag');
+                el.classList.add(this.dragAndDropConfig.config.dragstartCss);
                 this.sqDragAndDropDataService.setData($scope.sqDragData, dragAndDropZoneName);
                 $scope.sqOnDrag()($scope.sqDragData);
                 return false;
@@ -60,7 +61,7 @@
 
             //Wird aufgerufen wenn das Dragelement irgendwo abgworfen wird aber nicht über einer DropZone
             el.addEventListener('dragend', (e) => {
-                el.classList.remove('sq-drag');
+                el.classList.remove(this.dragAndDropConfig.config.dragstartCss);
                 //Die Daten im Service zurücksetzen
                 this.sqDragAndDropDataService.resetData();
                 return false;
@@ -80,9 +81,10 @@
             //Hier die abhängigen Module für unser Drang and Drop definieren.
             this._module = angular.module('dragAndDropData.directives', []);
             //Da unsere Direktive aus mehreren Definitionen besteht in der Draggable Moduldefinition alle Module definieren
-            this._module.directive('sqDraggable', ["SqDragAndDropDataService", (sqDragAndDropDataService) => { return new SqDraggable(sqDragAndDropDataService); }]);
-            this._module.directive('sqDroppable', ["SqDragAndDropDataService", (sqDragAndDropDataService) => { return new SqDroppable(sqDragAndDropDataService); }]);
-            this._module.service('SqDragAndDropDataService', SqDragAndDropDataService);
+            this._module.directive('sqDraggable', ["sqDragAndDropDataService", "dragAndDropConfig", (sqDragAndDropDataService: ISqDragAndDropDataService, dragAndDropConfig: IDragAndDropServiceProvider) => { return new SqDraggable(sqDragAndDropDataService, dragAndDropConfig); }]);
+            this._module.directive('sqDroppable', ["sqDragAndDropDataService", "dragAndDropConfig", (sqDragAndDropDataService: ISqDragAndDropDataService, dragAndDropConfig: IDragAndDropServiceProvider) => { return new SqDroppable(sqDragAndDropDataService, dragAndDropConfig); }]);
+            this._module.service('sqDragAndDropDataService', sqDragAndDropDataService);
+            this.module.provider("dragAndDropConfig", () => new DragAndDropServiceProvider());
             return this._module;
         }
         //#endregion
@@ -110,7 +112,7 @@
             sqDragDropName: "=" //Der Name für die DragZone man kann nur Zwischen den gleichen Dragnamen Items verschieben. Optionaler Parameter - Default: "sqDragAndDrop"
         }
 
-        constructor(private sqDragAndDropDataService: ISqDragAndDropDataService) {
+        constructor(private sqDragAndDropDataService: ISqDragAndDropDataService, private dragAndDropConfig: IDragAndDropServiceProvider) {
         }
 
         public link = ($scope: ISqDroppableScope, element: JQuery, attr: ng.IAttributes) => {
@@ -139,7 +141,7 @@
 
                 //Die Css Klasse nur hinzufügen, wenn das Item auch Gedropt Werden darf.
                 if (this.sqDragAndDropDataService.isSameDragAndDrop(dragAndDropZoneName)) {
-                    el.classList.add('sq-over');
+                    el.classList.add(this.dragAndDropConfig.config.dragoverCss);
                 }
 
                 return false;
@@ -147,13 +149,14 @@
 
             el.addEventListener('dragenter', (e) => {
                 if (this.sqDragAndDropDataService.isSameDragAndDrop(dragAndDropZoneName)) {
-                    el.classList.add('sq-over');
+                    el.classList.add(this.dragAndDropConfig.config.dragEnterCss);
                 }
                 return false;
             }, false);
 
             el.addEventListener('dragleave', (e) => {
-                el.classList.remove('sq-over');
+                el.classList.remove(this.dragAndDropConfig.config.dragoverCss);
+                el.classList.remove(this.dragAndDropConfig.config.dragEnterCss);
                 return false;
             }, false);
 
@@ -166,7 +169,8 @@
                     }
                 }
 
-                el.classList.remove('sq-over');
+                el.classList.remove(this.dragAndDropConfig.config.dragoverCss);
+                el.classList.remove(this.dragAndDropConfig.config.dragEnterCss);
                 //Prüfen ob es sich um Daten der selben Drag And Drop Zone handelt und nur nur dann wird auch das DropEvent ausgelöst.
                 if (this.sqDragAndDropDataService.isSameDragAndDrop(dragAndDropZoneName)) {
                     //Wir holen uns das aktuelle DragObjekt aus dem DragAndDropService
@@ -190,7 +194,7 @@
      * Der Drag And Drop Service der die Daten hält während das Item in der Ui verschoben wird 
      * zum Zielpunkt und am Zielpunkt können die Daten wieder abgerufen werden.
      */
-    export class SqDragAndDropDataService implements ISqDragAndDropDataService {
+    export class sqDragAndDropDataService implements ISqDragAndDropDataService {
         //static $inject = [];
         private dragData: any;
         private dragAndDropName: string;
@@ -238,6 +242,34 @@
         isSameDragAndDrop(dragAndDropName: string): boolean {
             return dragAndDropName === this.dragAndDropName;
         }
+    }
+
+    /*
+     * Configklasse für den DragAndDrop Service. Hier kann man die passenden Css Klassen ändern die gesetzt werden.
+     */
+    export class DragAndDropServiceProvider implements ng.IServiceProvider, IDragAndDropServiceProvider {
+        //Die Konfigurationsdaten entsprechend setzen.
+        config: IDragAndDropConfig = {
+            dragstartCss: "sq-drag",
+            dragoverCss: "sq-over",
+            dragEnterCss: "sq-over"
+        }
+
+        $get = () => {
+            return {
+                config: this.config
+            }
+        };
+    }
+    
+    export interface IDragAndDropServiceProvider {
+        config: IDragAndDropConfig;
+    }
+
+    export interface IDragAndDropConfig {
+        dragstartCss: string;
+        dragoverCss: string;
+        dragEnterCss: string;
     }
 
     export interface ISqDragAndDropDataService {
