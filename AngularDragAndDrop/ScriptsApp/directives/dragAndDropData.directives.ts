@@ -1,4 +1,4 @@
-﻿module App.Directives {
+module App.Directives {
     /*
      * Draggable Direktive hier werden die Daten hinterlegt die verschoben werden sollen:
      * ACHTUNG: bei der CallBack Funktion im Attribut "sqOnDrag" KEINE "()" am ende setzen!!
@@ -53,9 +53,13 @@
             //sein sonst bindet der IE das Event nicht richtig.
             el.addEventListener('dragstart', (e) => {
                 e.dataTransfer.effectAllowed = 'move';
+                //Hier müssen zwingend Daten gesetzt werden, da sonst der Firefox nur dragStart Event wirft aber z.b. kein Drop event mehr wenn keine Daten zum Draggen übergeben wurden.
+                e.dataTransfer.setData('Text', "sqDragData");
                 el.classList.add(this.dragAndDropConfig.config.dragstartCss);
                 this.sqDragAndDropDataService.setData($scope.sqDragData, dragAndDropZoneName);
-                $scope.sqOnDrag()($scope.sqDragData);
+                if (attr["sqOnDrag"] !== undefined) {
+                    $scope.sqOnDrag()($scope.sqDragData);
+                }
                 return false;
             }, false);
 
@@ -131,13 +135,14 @@
             }
 
             el.addEventListener('dragover', (e) => {
-                //Der Stiel des Cursors wenn das Dropitem über dem Ziel erscheint: copy, none, link, move
-                //http://html5.komplett.cc/code/chap_global/dropEffect_en.html
-                e.dataTransfer.dropEffect = 'move';
                 // allows us to drop
                 if (e.preventDefault) {
                     e.preventDefault();
                 }
+
+                 //Der Stiel des Cursors wenn das Dropitem über dem Ziel erscheint: copy, none, link, move
+                //http://html5.komplett.cc/code/chap_global/dropEffect_en.html
+                e.dataTransfer.dropEffect = 'move';
 
                 //Die Css Klasse nur hinzufügen, wenn das Item auch Gedropt Werden darf.
                 if (this.sqDragAndDropDataService.isSameDragAndDrop(dragAndDropZoneName)) {
@@ -213,6 +218,8 @@
             //Da man immer nur einen Drag und Drop Vorgang gleichzeitig ausgühren kann, reicht auch 
             //ein Objekt aus in dem die aktuellen Drag und Drop Daten gespeichert werden.
             this.dragData = data;
+            //console.log("Id to Move: " + this.dragData.Id);
+            //console.log(this.dragData)
             this.dragAndDropName = dragAndDropName;
         }
 
