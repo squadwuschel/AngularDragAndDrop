@@ -20,4 +20,3 @@ var App;
 })(App || (App = {}));
 //Unsere Anwendung intial aufrufen/starten
 App.MainApp.createApp(angular);
-//# sourceMappingURL=main.app.js.map

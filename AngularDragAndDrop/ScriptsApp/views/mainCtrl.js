@@ -48,4 +48,3 @@ var App;
         Views.MainCtrl = MainCtrl;
     })(Views = App.Views || (App.Views = {}));
 })(App || (App = {}));
-//# sourceMappingURL=mainCtrl.js.map
